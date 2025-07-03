@@ -7,6 +7,7 @@ use App\Models\User;  // Para cultores
 use App\Models\Comuna; // Para comunas
 use App\Models\Participante; // Para gestionar participantes
 use Illuminate\Http\Request;
+use SimpleSoftwareIO\QrCode\Facades\QrCode; // Importar la clase QrCode
 
 class TallerController extends Controller
 {
@@ -14,6 +15,13 @@ class TallerController extends Controller
     public function index()
     {
         $talleres = Taller::with(['cultor', 'comuna', 'participantes'])->get();
+        $qrCodes = [];
+
+        foreach ($talleres as $taller) {
+            $urlRegistro = route('registro.taller.form', $taller->id);
+            // Generar QR como string SVG. Se puede usar ->generate() para salida directa o ->format('png')->generate() para PNG.
+            $qrCodes[$taller->id] = QrCode::size(120)->generate($urlRegistro);
+        }
 
         // Obtener los cultores que no están asociados a ningún taller
         $cultores = User::where('rol', 'cultor')
@@ -22,7 +30,7 @@ class TallerController extends Controller
 
         $comunas = Comuna::all();
 
-        return view('talleres.index', compact('talleres', 'cultores', 'comunas'));
+        return view('talleres.index', compact('talleres', 'cultores', 'comunas', 'qrCodes'));
     }
 
 

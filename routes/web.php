@@ -8,6 +8,7 @@ use App\Http\Controllers\TallerController;
 use App\Http\Controllers\CultorController;
 use App\Http\Controllers\HorarioController;
 use App\Http\Controllers\ParticipanteController;
+use App\Http\Controllers\RegistroTallerController;
 
 
 Route::resource('comunas', ComunaController::class);
@@ -27,6 +28,10 @@ Route::delete('/horarios/{horario}', [HorarioController::class, 'destroy'])->nam
 
 Route::resource('cultores', CultorController::class);
 Route::resource('participantes', ParticipanteController::class);
+
+// Rutas para el registro público de participantes a talleres
+Route::get('/registro-taller/{taller}', [RegistroTallerController::class, 'showRegistrationForm'])->name('registro.taller.form');
+Route::post('/registro-taller/{taller}', [RegistroTallerController::class, 'registerParticipant'])->name('registro.taller.submit');
 
 
 

@@ -71,6 +71,23 @@
                                                 <td>{{ $taller->comuna->nombre }}</td>
                                                 <td>
                                                     <div class="d-flex gap-2">
+                                                        <button type="button" class="btn btn-default btn-sm" data-bs-toggle="modal" data-bs-target="#modal-qr-{{ $taller->id }}" title="Código QR de Registro">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-qrcode" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                                <rect x="4" y="4" width="6" height="6" rx="1" />
+                                                                <line x1="7" y1="17" x2="7" y2="17.01" />
+                                                                <rect x="14" y="4" width="6" height="6" rx="1" />
+                                                                <line x1="7" y1="7" x2="7" y2="7.01" />
+                                                                <rect x="4" y="14" width="6" height="6" rx="1" />
+                                                                <line x1="17" y1="7" x2="17" y2="7.01" />
+                                                                <line x1="14" y1="14" x2="17" y2="14" />
+                                                                <line x1="20" y1="14" x2="20" y2="14.01" />
+                                                                <line x1="14" y1="14" x2="14" y2="17" />
+                                                                <line x1="14" y1="20" x2="17" y2="20" />
+                                                                <line x1="17" y1="17" x2="20" y2="17" />
+                                                                <line x1="20" y1="17" x2="20" y2="20" />
+                                                            </svg>
+                                                        </button>
                                                         <a href="{{ route('talleres.show', $taller) }}" class="btn btn-default btn-sm" title="Ver detalles">
                                                             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-eye" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
@@ -116,6 +133,7 @@
         </div>
     </div>
 
+    {{-- Modal para Crear Taller --}}
     <div class="modal modal-blur fade" id="modal-create" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document"> {{-- Ampliamos el tamaño del modal --}}
             <form action="{{ route('talleres.store') }}" method="POST">
