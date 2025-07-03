@@ -396,7 +396,7 @@
     <script src="{{ url('dist/libs/jsvectormap/dist/maps/world.js') }}" defer></script>
     <script src="{{ url('dist/libs/jsvectormap/dist/maps/world-merc.js') }}" defer></script>
     <!-- Tabler Core -->
-    <script src="{{ url('dist/js/tabler.min.js') }}" defer></script>
+    <script src="{{ url('dist/js/tabler.min.js') }}"></script>
     <script src="{{ url('dist/js/demo.min.js') }}" defer></script>
     
     @yield('scripts')

@@ -8,6 +8,7 @@ use App\Models\Comuna; // Para comunas
 use App\Models\Participante; // Para gestionar participantes
 use Illuminate\Http\Request;
 use SimpleSoftwareIO\QrCode\Facades\QrCode; // Importar la clase QrCode
+use Illuminate\Support\Str; // Importar Str facade
 
 class TallerController extends Controller
 {
@@ -168,6 +169,49 @@ class TallerController extends Controller
     }
 
 
+    /**
+     * Muestra la lista de participantes inscritos en un taller.
+     *
+     * @param  \App\Models\Taller  $taller
+     * @return \Illuminate\View\View
+     */
+    public function participantesInscritos(Taller $taller)
+    {
+        // Cargar participantes con su comuna y la fecha de inscripción desde la tabla pivote
+        $taller->load(['participantes' => function ($query) {
+            $query->with('comuna')->withPivot('fecha_inscripcion')->orderBy('nombre');
+        }]);
 
+        return view('talleres.participantes-inscritos', compact('taller'));
+    }
 
+    /**
+     * Exporta la lista de participantes de un taller a Excel.
+     *
+     * @param  \App\Models\Taller  $taller
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
+    public function exportParticipantesExcel(Taller $taller)
+    {
+        $fileName = 'participantes_taller_' . Str::slug($taller->nombre) . '_' . now()->format('YmdHis') . '.xlsx';
+        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\ParticipantesTallerExport($taller), $fileName);
+    }
+
+    /**
+     * Exporta la lista de participantes de un taller a PDF.
+     *
+     * @param  \App\Models\Taller  $taller
+     * @return \Illuminate\Http\Response
+     */
+    public function exportParticipantesPdf(Taller $taller)
+    {
+        // Cargar participantes con su comuna y la fecha de inscripción
+        $taller->load(['participantes' => function ($query) {
+            $query->with('comuna')->withPivot('fecha_inscripcion')->orderBy('nombre');
+        }]);
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('talleres.participantes-pdf', compact('taller'));
+        $fileName = 'participantes_taller_' . Str::slug($taller->nombre) . '_' . now()->format('YmdHis') . '.pdf';
+        return $pdf->download($fileName);
+    }
 }

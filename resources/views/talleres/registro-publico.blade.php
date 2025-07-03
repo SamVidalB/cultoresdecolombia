@@ -8,11 +8,10 @@
     <link href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/css/tabler.min.css" rel="stylesheet"/>
     <style>
         body {
-            /* display: flex;
+            display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh; */
-            margin-top: 20px;
+            min-height: 100vh;
             background-color: #f5f7fb;
         }
         .card {
@@ -27,7 +26,7 @@
             <div class="col-md-8 col-lg-6">
                 <div class="card">
                     <div class="card-header">
-                        <h1 class="">Inscripción al Taller: {{ $taller->nombre }}</h1>
+                        <h3 class="card-title">Inscripción al Taller: {{ $taller->nombre }}</h3>
                     </div>
                     <div class="card-body">
                         @if (session('success'))

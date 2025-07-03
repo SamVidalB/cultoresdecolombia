@@ -19,6 +19,8 @@ Route::post('/comunas/talleres', [ComunaController::class, 'storeTaller'])->name
 Route::resource('talleres', TallerController::class)->parameters([
     'talleres' => 'taller'
 ]);
+Route::get('talleres/{taller}/participantes-inscritos', [TallerController::class, 'participantesInscritos'])->name('talleres.participantesInscritos');
+Route::get('talleres/{taller}/participantes-export-excel', [TallerController::class, 'exportParticipantesExcel'])->name('talleres.participantes.export.excel');
 
 Route::post('/horarios', [HorarioController::class, 'store'])->name('horarios.store');
 Route::put('/horarios/{horario}', [HorarioController::class, 'update'])->name('horarios.update');
