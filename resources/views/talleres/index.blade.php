@@ -267,6 +267,48 @@
         </div>
     </div>
 
+    @foreach ($talleres as $taller)
+        <!-- Modal QR para cada taller -->
+        <div class="modal modal-blur fade" id="modal-qr-{{ $taller->id }}" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog " role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Código QR para {{ $taller->nombre }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <!-- Aquí va el código QR generado -->
+                        {!! QrCode::size(300)->generate(route('registro.taller.form', $taller->id)) !!}
+                        
+                        <div class="mt-3">
+                            <p class="text-muted">Escanea este código para registrar asistencia</p>
+                            <a href="{{ route('registro.taller.form', $taller->id) }}" class="btn btn-outline-primary" target="_blank">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="16" height="16" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                    <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+                                    <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+                                </svg>
+                                Ver enlace de registro
+                            </a>
+                            <button type="button" class="btn btn-primary" onclick="descargarQR('{{ $taller->id }}')">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-download" width="16" height="16" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" />
+                                <path d="M7 11l5 5l5 -5" />
+                                <path d="M12 4l0 12" />
+                            </svg>
+                            Descargar QR
+                        </button>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-link" data-bs-dismiss="modal">Cerrar</button>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endforeach
 
 
 @endsection
@@ -277,6 +319,42 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <script>
+
+        function descargarQR(tallerId) {
+            // Obtener el elemento SVG del QR dentro del modal específico
+            const modal = document.getElementById('modal-qr-' + tallerId);
+            const svg = modal.querySelector('svg');
+            
+            if (!svg) {
+                console.error('No se encontró el elemento SVG');
+                return;
+            }
+
+            const serializer = new XMLSerializer();
+            let source = serializer.serializeToString(svg);
+            
+            // Agregar namespaces si no están presentes
+            if(!source.match(/^<svg[^>]+xmlns="http:\/\/www\.w3\.org\/2000\/svg"/)){
+                source = source.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
+            }
+            if(!source.match(/^<svg[^>]+"http:\/\/www\.w3\.org\/1999\/xlink"/)){
+                source = source.replace(/^<svg/, '<svg xmlns:xlink="http://www.w3.org/1999/xlink"');
+            }
+            
+            // Agregar declaración XML
+            source = '<?xml version="1.0" standalone="no"?>\r\n' + source;
+            
+            // Convertir a URL de datos
+            const url = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(source);
+            
+            // Crear enlace de descarga
+            const link = document.createElement('a');
+            link.download = 'qr-taller-' + tallerId + '.svg';
+            link.href = url;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
 
         function initSelect2() {
             $('select').select2({
