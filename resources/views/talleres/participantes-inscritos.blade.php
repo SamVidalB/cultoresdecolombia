@@ -22,14 +22,14 @@
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /><path d="M5 12l6 6" /><path d="M5 12l6 -6" /></svg>
                             Volver a Talleres
                         </a>
-                        <button type="button" class="btn btn-success d-sm-inline-block" id="btn-export-excel" disabled>
+                        <a href="{{ route('talleres.participantes.export.excel', $taller->id) }}" class="btn btn-success d-sm-inline-block" id="btn-export-excel" @if($taller->participantes->isEmpty()) disabled @endif>
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-spreadsheet" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 0 0 1 1h4" /><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" /><path d="M8 11h8v7h-8z" /><path d="M8 15h8" /><path d="M11 11v7" /></svg>
                             Descargar Excel
-                        </button>
-                        <button type="button" class="btn btn-danger d-sm-inline-block" id="btn-export-pdf" disabled>
+                        </a>
+                        <a href="{{ route('talleres.participantes.export.pdf', $taller->id) }}" class="btn btn-danger d-sm-inline-block" id="btn-export-pdf" @if($taller->participantes->isEmpty()) disabled @endif>
                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-type-pdf" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 0 0 1 1h4" /><path d="M5 12v-7a2 2 0 0 1 2 -2h7l5 5v4" /><path d="M5 18h1.5a1.5 1.5 0 0 0 0 -3h-1.5v6" /><path d="M17 18h2" /><path d="M20 15h-3v6" /><path d="M11 15v6h1a2 2 0 0 0 2 -2v-2a2 2 0 0 0 -2 -2h-1z" /></svg>
                             Descargar PDF
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -91,23 +91,18 @@
 
 @section('scripts')
 <script>
+    // No se necesita JavaScript adicional por ahora, ya que los enlaces funcionan directamente.
+    // Si se quisiera añadir confirmaciones o lógica más compleja, se haría aquí.
     document.addEventListener('DOMContentLoaded', function () {
-        // Los botones de exportación estarán habilitados cuando se implemente la funcionalidad
-        // Por ahora, los dejamos deshabilitados como se definió en el HTML.
-        // const btnExcel = document.getElementById('btn-export-excel');
-        // const btnPdf = document.getElementById('btn-export-pdf');
+        const btnExcel = document.getElementById('btn-export-excel');
+        const btnPdf = document.getElementById('btn-export-pdf');
 
-        // if (btnExcel) {
-        //     btnExcel.addEventListener('click', function() {
-        //         window.location.href = "{{-- route('talleres.participantes.export.excel', $taller->id) --}}";
-        //     });
-        // }
-
-        // if (btnPdf) {
-        //     btnPdf.addEventListener('click', function() {
-        //         window.location.href = "{{-- route('talleres.participantes.export.pdf', $taller->id) --}}";
-        //     });
-        // }
+        // Si no hay participantes, los botones ya están deshabilitados por Blade.
+        // Si se quisiera deshabilitar también con JS como doble chequeo:
+        @if($taller->participantes->isEmpty())
+            if(btnExcel) btnExcel.classList.add('disabled');
+            if(btnPdf) btnPdf.classList.add('disabled');
+        @endif
     });
 </script>
 @endsection
